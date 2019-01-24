@@ -1,20 +1,30 @@
 import wpilib
 
 class DriveTrain:
-    frontLeft: wpilib.VictorSP
-    frontRight: wpilib.VictorSP
-    backLeft: wpilib.VictorSP
-    backRight: wpilib.VictorSP
-    speeds: {0,0,0,0}
+    frontLeft: wpilib.Victor
+    frontRight: wpilib.Victor
+    backLeft: wpilib.Victor
+    backRight: wpilib.Victor
 
-    def _init_(self):
+    def __init__(self):
         print("DriveTrain created")
+        self.speeds = []
 
     def set(self, x, y, twist):
-        self.speeds[0] = (y - x + twist) / 3
-        self.speeds[1] = (y + x - twist) / 3
-        self.speeds[2] = (y + x + twist) / 3
-        self.speeds[3] = (y - x - twist) / 3
+        speeds = []
+        speeds.append((y - x + twist)*1.0)
+        speeds.append((y + x - twist)*1.0)
+        speeds.append((y + x + twist)*1.0)
+        speeds.append((y - x - twist)*1.0)
+        print(speeds)
+        if max([abs(x) for x in speeds]) > 1: 
+            speeds = [(max([abs(y) for y in speeds]) / x) for x in speeds]
+        print(speeds)
+
+        self.speeds = speeds
+
+    def debugSpeeds(self):
+        return self.speeds
 
     def execute(self):
         self.frontLeft.set(self.speeds[0])
