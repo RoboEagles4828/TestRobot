@@ -6,14 +6,14 @@ class Arm:
     armWrist: wpilib.Spark
     def __init__(self):
         self.speed = 0
-        self.armSpeed = 0
+        self.wristSpeed = 0
     def setSpeed(self, speed):
         self.speed = speed
-    def armWristSpeed(self,speed)
+    def setWristSpeed(self,speed)
         self.wristSpeed = 0
     def execute(self):
         self.liftRight.set(self.speed)
         self.liftLeft.set(self.speed)
-        self.armPivot.set(self.armSpeed)
-    
+        self.armWrist.set(self.wristSpeed)
+
 #ports 8 and 9
