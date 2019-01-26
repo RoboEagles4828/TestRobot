@@ -14,12 +14,14 @@ class Robot(magicbot.MagicRobot):
     lift: Lift
 
     def createObjects(self):
-        with open("ports.json", "r") as f:
+        with open("../ports.json") as f:
             self.ports = json.load(f)
+
         #Lift---------------------------------------------
         self.speed = 0
-        self.liftLeft = wpilib.Victor(8)
-        self.liftRight = wpilib.Victor(9)
+        self.liftLeft = wpilib.Victor(self.ports["lift"]["left"])
+        self.liftRight = wpilib.Victor(self.ports["lift"]["right"])
+
         #DriveTrain---------------------------------------
         self.frontLeft = wpilib.Victor(self.ports["drivetrain"]["frontLeft"])
         self.frontRight = wpilib.Victor(self.ports["drivetrain"]["frontRight"])
@@ -40,12 +42,12 @@ class Robot(magicbot.MagicRobot):
             #if self.printTimer.hasPeriodPassed(0.5):
             #    self.logger.info("Driving: " + str(self.joystick.getX()) + " " + str(self.joystick.getY()) + " " + str(self.joystick.getTwist()))
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
-            if joystick.getRawButton(9):
-                lift.set(0.1)
-            if joystick.getRawButton(11):
-                lift.set(-0.1)
-            if joystick.getRawButton(12):
-                lift.set(0)
+            if self.joystick.getRawButton(9):
+                self.lift.setSpeed(0.1)
+            if self.joystick.getRawButton(11):
+                self.lift.setSpeed(-0.1)
+            if self.joystick.getRawButton(12):
+                self.lift.setSpeed(0)
         except:
             self.onException()
 
