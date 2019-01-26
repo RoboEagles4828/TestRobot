@@ -8,7 +8,7 @@ class DriveTrain:
 
     def __init__(self):
         print("DriveTrain created")
-        self.speeds = []
+        self.speeds = [0, 0, 0, 0]
 
     def set(self, x, y, twist):
         speeds = []

@@ -22,9 +22,9 @@ class Robot(magicbot.MagicRobot):
         self.liftRight = wpilib.Victor(9)
         #DriveTrain---------------------------------------
         self.frontLeft = wpilib.Victor(self.ports["drivetrain"]["frontLeft"])
-        self.frontRight = wpilib.Victor(7)
-        self.backLeft = wpilib.Victor(0) #Change this back to 8 later
-        self.backRight = wpilib.Victor(0) #change this back to 9 later
+        self.frontRight = wpilib.Victor(self.ports["drivetrain"]["frontRight"])
+        self.backLeft = wpilib.Victor(self.ports["drivetrain"]["backLeft"])
+        self.backRight = wpilib.Victor(self.ports["drivetrain"]["backRight"])
 
         self.joystick = wpilib.Joystick(0)
 
