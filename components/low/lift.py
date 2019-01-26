@@ -1,11 +1,11 @@
 import wpilib
 
-class lift:
+class Lift:
     liftRight: wpilib.Victor
     liftLeft: wpilib.Victor
     def _init_(self):
         self.speed = 0
-    def setSpeed(speed):
+    def setSpeed(self, speed):
         self.speed = speed
     def execute(self):
         self.liftRight.set(self.speed)

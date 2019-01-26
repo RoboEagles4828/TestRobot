@@ -14,7 +14,7 @@ class Robot(magicbot.MagicRobot):
     lift: Lift
 
     def createObjects(self):
-        with open("ports.json") as f:
+        with open("ports.json", "r") as f:
             self.ports = json.load(f)
         #Lift---------------------------------------------
         self.speed = 0
