@@ -19,8 +19,8 @@ class Robot(magicbot.MagicRobot):
 
         #Lift---------------------------------------------
         self.speed = 0
-        self.liftLeft = wpilib.Victor(self.ports["lift"]["left"])
-        self.liftRight = wpilib.Victor(self.ports["lift"]["right"])
+        self.liftLeft = wpilib.Victor(self.ports["arm"]["left"])
+        self.liftRight = wpilib.Victor(self.ports["arm"]["right"])
 
         #DriveTrain---------------------------------------
         self.frontLeft = wpilib.Victor(self.ports["drivetrain"]["frontLeft"])
