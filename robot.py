@@ -11,16 +11,16 @@ logging.basicConfig(level=logging.DEBUG)
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
-    lift: Lift
+    arm: Arm
 
     def createObjects(self):
-        with open("../ports.json") as f:
+        with open("ports.json", "r") as f:
             self.ports = json.load(f)
-
         #Lift---------------------------------------------
+        self.wristSpeed = 0
         self.speed = 0
-        self.liftLeft = wpilib.Victor(self.ports["arm"]["left"])
-        self.liftRight = wpilib.Victor(self.ports["arm"]["right"])
+        self.armLeft = wpilib.Victor(self.ports["arm"]["left"])
+        self.armRight = wpilib.Victor(self.ports["arm"]["right"])
 
         #DriveTrain---------------------------------------
         self.frontLeft = wpilib.Victor(self.ports["drivetrain"]["frontLeft"])
@@ -42,12 +42,15 @@ class Robot(magicbot.MagicRobot):
             #if self.printTimer.hasPeriodPassed(0.5):
             #    self.logger.info("Driving: " + str(self.joystick.getX()) + " " + str(self.joystick.getY()) + " " + str(self.joystick.getTwist()))
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
-            if self.joystick.getRawButton(9):
-                self.lift.setSpeed(0.1)
-            if self.joystick.getRawButton(11):
-                self.lift.setSpeed(-0.1)
-            if self.joystick.getRawButton(12):
-                self.lift.setSpeed(0)
+            if joystick.getRawButton(9):
+                arm.setSpeed(0.1)
+            if joystick.getRawButton(11):
+                arm.setSpeed(-0.1)
+            if joystick.getRawButton(12):
+                arm.setSpeed(0)
+            if joystick.getRawButton(3):
+                arm.set
+                
         except:
             self.onException()
 
