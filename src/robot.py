@@ -1,5 +1,6 @@
 import magicbot 
 import wpilib
+import json
 
 from components.low.drivetrain import DriveTrain
 
@@ -11,7 +12,10 @@ class Robot(magicbot.MagicRobot):
     drive: DriveTrain
 
     def createObjects(self):
-        self.frontLeft = wpilib.Victor(6)
+        with open("ports.json") as f:
+            self.ports = json.load(f)
+        
+        self.frontLeft = wpilib.Victor(self.ports["drivetrain"]["frontLeft"])
         self.frontRight = wpilib.Victor(7)
         self.backLeft = wpilib.Victor(8)
         self.backRight = wpilib.Victor(9)
@@ -30,8 +34,8 @@ class Robot(magicbot.MagicRobot):
             #if self.printTimer.hasPeriodPassed(0.5):
             #    self.logger.info("Driving: " + str(self.joystick.getX()) + " " + str(self.joystick.getY()) + " " + str(self.joystick.getTwist()))
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
-        except Exception as e:
-            self.onException();
+        except:
+            self.onException()
 
 if __name__ == '__main__':
     wpilib.run(Robot)

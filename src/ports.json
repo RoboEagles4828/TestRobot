@@ -1,0 +1,8 @@
+{
+    "drivetrain": {
+        "frontLeft": 6,
+        "frontRight": 7,
+        "backLeft": 8,
+        "backRight": 9
+    }
+}

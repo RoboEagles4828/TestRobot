@@ -16,12 +16,13 @@ class DriveTrain:
         speeds.append((y + x - twist)*1.0)
         speeds.append((y + x + twist)*1.0)
         speeds.append((y - x - twist)*1.0)
-        print(speeds)
         if max([abs(x) for x in speeds]) > 1: 
-            speeds = [(max([abs(y) for y in speeds]) / x) for x in speeds]
-        print(speeds)
+            speeds = [(x / max([abs(y) for y in speeds])) for x in speeds]
 
         self.speeds = speeds
+
+    def setDirect(self, a, b, c, d):
+        self.speeds = [a, b, c, d]
 
     def debugSpeeds(self):
         return self.speeds
@@ -31,5 +32,3 @@ class DriveTrain:
         self.frontRight.set(self.speeds[1])
         self.backLeft.set(self.speeds[2])
         self.backRight.set(self.speeds[3])
-
-        self.enabled = False
