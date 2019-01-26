@@ -9,5 +9,6 @@ class lift:
         self.speed = speed
     def execute(self):
         self.liftRight.set(self.speed)
-        self.liftLeft.set(self.speed)
+        self.liftLeft.set(-self.speed)
+    
 #ports 8 and 9
