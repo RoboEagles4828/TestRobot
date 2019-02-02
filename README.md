@@ -1,5 +1,5 @@
-# Python Testing for Mecanum Test Chassis
+# Python Testing for Traction Test Chassis
 
-Python's cool, right? So let's make a python robot!
+Official switch to python! All future robot code will be in Python 3!
 
 Uses RobotPy: https://robotpy.readthedocs.io/en/latest
