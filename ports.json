@@ -1,16 +1,16 @@
 {
      "arm": {
-        "arm_left": 0,
+        "arm_left": 3,
         "arm_right": 4,
-        "wrist": 5,
-        "intake": 4,
+        "wrist": 1,
+        "intake": 2,
         "hatch_in": 4,
         "hatch_out": 5
      },
      "drive": {
-        "front_left": 6,
-        "front_right": 7,
-        "back_left": 8,
-        "back_right": 9
+        "front_left": 1,
+        "front_right": 3,
+        "back_left": 0,
+        "back_right": 2
      }
 }
