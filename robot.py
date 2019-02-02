@@ -67,7 +67,7 @@ class Robot(magicbot.MagicRobot):
             else:
                 self.arm.setIntakeSpeed(0)
             # Hatch
--           self.arm.setHatch(self.joystick.getRawButton(buttons["hatch"]))
+            self.arm.setHatch(self.joystick.getRawButton(buttons["hatch"]))
         except:
             self.onException()
 
