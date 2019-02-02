@@ -1,0 +1,10 @@
+{
+     "arm": {
+        "arm_up": 7,
+        "arm_down": 8,
+        "wrist": 9,
+        "intake_in": 10,
+        "intake_out": 11,
+        "hatch": 12
+     }
+}

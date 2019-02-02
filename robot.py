@@ -17,6 +17,8 @@ class Robot(magicbot.MagicRobot):
     def createObjects(self):
         with open("../ports.json" if os.getcwd()[-5:-1] == "test" else "ports.json") as f:
             self.ports = json.load(f)
+        with open("../buttons.json" if os.getcwd()[-5:-1] == "test" else "buttons.json") as f:
+            self.buttons = json.load(f)
         # Arm
         arm_ports = self.ports["arm"]
         self.arm_left = ctre.WPI_TalonSRX(arm_ports["arm_left"])
@@ -46,26 +48,26 @@ class Robot(magicbot.MagicRobot):
         try:
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
             # Arm
-            if self.joystick.getRawButton(9):
+            if self.joystick.getRawButton(buttons["arm_up"]):
                 self.arm.setSpeed(0.3)
-            elif self.joystick.getRawButton(11):
+            elif self.joystick.getRawButton(buttons["arm_down"]):
                 self.arm.setSpeed(-0.3)
             else:
                 self.arm.setSpeed(0)
             # Wrist
-            if self.joystick.getRawButton(3):
-                self.arm.setWristSpeed(.3)
+            if self.joystick.getRawButton(buttons["wrist"]):
+                self.arm.setWristSpeed(0.3)
             else:
                 self.arm.setWristSpeed(0)
             # Intake
-            if self.joystick.getRawButton(2):
+            if self.joystick.getRawButton(buttons["intake_in"]):
                 self.arm.setIntakeSpeed(-1)
-            elif self.joystick.getRawButton(1):
+            elif self.joystick.getRawButton(buttons["intake_out"]):
                 self.arm.setIntakeSpeed(1)
             else:
                 self.arm.setIntakeSpeed(0)
             # Hatch
-            self.arm.setHatch(self.joystick.getRawButton(10))
+-           self.arm.setHatch(self.joystick.getRawButton(buttons["hatch"]))
         except:
             self.onException()
 
