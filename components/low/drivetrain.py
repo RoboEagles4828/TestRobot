@@ -9,28 +9,30 @@ class DriveTrain:
 
     def __init__(self):
         print("DriveTrain created")
-        self.speeds = [0, 0]
+        self.speed_left = 0
+        self.speed_right = 0
 
     def set(self, x, y, twist):
-        speeds = []
+        speed_left = ((y + (x if x > 0 else 0) + twist))
+        speed_right = ((y - (x if x < 0 else 0) - twist))
 
-        speeds.append((y + (x if x > 0 else 0) + twist))
-        speeds.append((y - (x if x < 0 else 0) - twist))
+        speed_max = max(abs(speed_left), abs(speed_right))
+        if speed_max > 1:
+            speed_left /= speed_max
+            speed_right /= speed_max
 
-        abs_speeds = [abs(x) for x in speeds]
-        if max(abs_speeds) > 1:
-            speeds = [x / max(abs_speeds) for x in speeds]
+        self.speed_left = speed_left
+        self.speed_right = speed_right
 
-        self.speeds = speeds
-
-    def setSpeeds(self, a, b):
-        self.speeds = [a, b]
+    def setSpeeds(self, speed_left, speed_right):
+        self.speed_left = speed_left
+        self.speed_right = speed_right
 
     def getSpeeds(self):
-        return self.speeds
+        return [self.speed_left, self.speed_right]
 
     def execute(self):
-        self.front_left.set(self.speeds[0])
-        self.front_right.set(self.speeds[1])
-        self.back_left.set(self.speeds[0])
-        self.back_right.set(self.speeds[1])
+        self.front_left.set(self.speed_left)
+        self.front_right.set(self.speed_right)
+        self.back_left.set(self.speed_left)
+        self.back_right.set(self.speed_right)
