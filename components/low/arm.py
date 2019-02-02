@@ -2,33 +2,35 @@ import wpilib
 import ctre
 
 class Arm:
-    armRight: ctre.WPI_TalonSRX
-    armLeft: wpilib.Victor
-    armWrist: ctre.WPI_TalonSRX
-    armRoller: wpilib.Spark
+
+    arm_left: wpilib.Victor
+    arm_right: ctre.WPI_TalonSRX
+    wrist: ctre.WPI_TalonSRX
+    intake: wpilib.Spark
     hatch: wpilib.DoubleSolenoid
 
     def __init__(self):
         self.speed = 0
-        self.wristSpeed = 0
-        self.intakeSpeed = 0
+        self.wrist_speed = 0
+        self.intake_speed = 0
+
     def setSpeed(self, speed):
         self.speed = speed
-    def armWristSpeed(self,speed):
-        self.wristSpeed = speed
-    def intake(self, speed):
-        self.intakeSpeed = speed
-        
-    def hatchSet(self, val):
-        if val == 1:
+
+    def setWristSpeed(self, speed):
+        self.wrist_speed = speed
+
+    def setIntakeSpeed(self, speed):
+        self.intake_speed = speed
+
+    def setHatch(self, x):
+        if x:
             self.hatch.set(wpilib.DoubleSolenoid.Value.kForward)
         else:
             self.hatch.set(wpilib.DoubleSolenoid.Value.kReverse)
-                
-    
+
     def execute(self):
-        self.armRight.set(self.speed)
-        self.armLeft.set(self.speed)
-        self.armWrist.set(self.wristSpeed)
-        self.armRoller.set(self.intakeSpeed)
-#ports 8 and 9
+        self.arm_left.set(self.speed)
+        self.arm_right.set(self.speed)
+        self.wrist.set(self.wrist_speed)
+        self.intake.set(self.intake_speed)

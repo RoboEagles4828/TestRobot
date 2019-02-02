@@ -1,10 +1,11 @@
 import wpilib
 
 class DriveTrain:
-    frontLeft: wpilib.Victor
-    frontRight: wpilib.Victor
-    backLeft: wpilib.Victor
-    backRight: wpilib.Victor
+
+    front_left: wpilib.Victor
+    front_right: wpilib.Victor
+    back_left: wpilib.Victor
+    back_right: wpilib.Victor
 
     def __init__(self):
         print("DriveTrain created")
@@ -12,23 +13,26 @@ class DriveTrain:
 
     def set(self, x, y, twist):
         speeds = []
-        speeds.append((y - x + twist)*1.0)
-        speeds.append((y + x - twist)*1.0)
-        speeds.append((y + x + twist)*1.0)
-        speeds.append((y - x - twist)*1.0)
-        if max([abs(x) for x in speeds]) > 1: 
-            speeds = [(x / max([abs(y) for y in speeds])) for x in speeds]
+
+        speeds.append((y + (x if x > 0 else 0) + twist))
+        speeds.append((y - (x if x < 0 else 0) - twist))
+        speeds.append((y + (x if x > 0 else 0) + twist))
+        speeds.append((y - (x if x < 0 else 0) - twist))
+
+        abs_speeds = [abs(x) for x in speeds]
+        if max(abs_speeds) > 1:
+            speeds = [x / max(abs_speeds) for x in speeds]
 
         self.speeds = speeds
 
-    def setDirect(self, a, b, c, d):
+    def setSpeeds(self, a, b, c, d):
         self.speeds = [a, b, c, d]
 
-    def debugSpeeds(self):
+    def getSpeeds(self):
         return self.speeds
 
     def execute(self):
-        self.frontLeft.set(self.speeds[0])
-        self.frontRight.set(self.speeds[1])
-        self.backLeft.set(self.speeds[2])
-        self.backRight.set(self.speeds[3])
+        self.front_left.set(self.speeds[0])
+        self.front_right.set(self.speeds[1])
+        self.back_left.set(self.speeds[2])
+        self.back_right.set(self.speeds[3])
