@@ -1,16 +1,16 @@
 {
-    "drivetrain": {
-        "frontLeft": 6,
-        "frontRight": 7,
-        "backLeft": 8,
-        "backRight": 9
-    },
-    "arm": {
-        "elbowLeft": 0,
-        "elbowRight": 4,
+     "arm": {
+        "arm_left": 0,
+        "arm_right": 4,
         "wrist": 5,
-        "roller": 4,
-        "hatchA": 4,
-        "hatchB": 5
-    }
+        "intake": 4,
+        "hatch_in": 4,
+        "hatch_out": 5
+     },
+     "drive": {
+        "front_left": 6,
+        "front_right": 7,
+        "back_left": 8,
+        "back_right": 9
+     }
 }
