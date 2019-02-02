@@ -17,7 +17,6 @@ class Robot(magicbot.MagicRobot):
     def createObjects(self):
         with open("../ports.json" if os.getcwd()[-5:-1] == "test" else "ports.json") as f:
             self.ports = json.load(f)
-
         # Arm
         arm_ports = self.ports["arm"]
         self.arm_left = wpilib.Victor(arm_ports["arm_left"])
@@ -25,7 +24,6 @@ class Robot(magicbot.MagicRobot):
         self.wrist = ctre.WPI_TalonSRX(arm_ports["wrist"])
         self.intake = wpilib.Spark(arm_ports["intake"])
         self.hatch = wpilib.DoubleSolenoid(arm_ports["hatch_in"], arm_ports["hatch_out"])
-
         # DriveTrain
         drive_ports = self.ports["drive"]
         self.front_left = wpilib.Victor(drive_ports["front_left"])
@@ -47,7 +45,6 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         try:
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
-
             # Arm
             if self.joystick.getRawButton(9):
                 self.arm.setSpeed(0.3)
@@ -55,26 +52,20 @@ class Robot(magicbot.MagicRobot):
                 self.arm.setSpeed(-0.3)
             else:
                 self.arm.setSpeed(0)
-
             # Wrist
             if self.joystick.getRawButton(3):
                 self.arm.setWristSpeed(.3)
             else:
                 self.arm.setWristSpeed(0)
-
             # Intake
             if self.joystick.getRawButton(2):
-                self.arm.setIntake(-1)
+                self.arm.setIntakeSpeed(-1)
             elif self.joystick.getRawButton(1):
-                self.arm.setIntake(1)
+                self.arm.setIntakeSpeed(1)
             else:
-                self.arm.setIntake(0)
-
+                self.arm.setIntakeSpeed(0)
             # Hatch
-            if self.joystick.getRawButton(5):
-                self.arm.setHatch(1)
-            else:
-                self.arm.setHatch(0)
+            self.arm.setHatch(self.joystick.getRawButton(10))
         except:
             self.onException()
 
