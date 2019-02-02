@@ -48,26 +48,27 @@ class Robot(magicbot.MagicRobot):
         try:
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
             # Arm
-            if self.joystick.getRawButton(buttons["arm_up"]):
+            arm_buttons = self.buttons["arm"]
+            if self.joystick.getRawButton(arm_buttons["arm_up"]):
                 self.arm.setSpeed(0.3)
-            elif self.joystick.getRawButton(buttons["arm_down"]):
+            elif self.joystick.getRawButton(arm_buttons["arm_down"]):
                 self.arm.setSpeed(-0.3)
             else:
                 self.arm.setSpeed(0)
             # Wrist
-            if self.joystick.getRawButton(buttons["wrist"]):
+            if self.joystick.getRawButton(arm_buttons["wrist"]):
                 self.arm.setWristSpeed(0.3)
             else:
                 self.arm.setWristSpeed(0)
             # Intake
-            if self.joystick.getRawButton(buttons["intake_in"]):
+            if self.joystick.getRawButton(arm_buttons["intake_in"]):
                 self.arm.setIntakeSpeed(-1)
-            elif self.joystick.getRawButton(buttons["intake_out"]):
+            elif self.joystick.getRawButton(arm_buttons["intake_out"]):
                 self.arm.setIntakeSpeed(1)
             else:
                 self.arm.setIntakeSpeed(0)
             # Hatch
-            self.arm.setHatch(self.joystick.getRawButton(buttons["hatch"]))
+            self.arm.setHatch(self.joystick.getRawButton(arm_buttons["hatch"]))
         except:
             self.onException()
 
