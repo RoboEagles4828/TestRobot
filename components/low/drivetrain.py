@@ -9,13 +9,11 @@ class DriveTrain:
 
     def __init__(self):
         print("DriveTrain created")
-        self.speeds = [0, 0, 0, 0]
+        self.speeds = [0, 0]
 
     def set(self, x, y, twist):
         speeds = []
 
-        speeds.append((y + (x if x > 0 else 0) + twist))
-        speeds.append((y - (x if x < 0 else 0) - twist))
         speeds.append((y + (x if x > 0 else 0) + twist))
         speeds.append((y - (x if x < 0 else 0) - twist))
 
@@ -25,8 +23,8 @@ class DriveTrain:
 
         self.speeds = speeds
 
-    def setSpeeds(self, a, b, c, d):
-        self.speeds = [a, b, c, d]
+    def setSpeeds(self, a, b):
+        self.speeds = [a, b]
 
     def getSpeeds(self):
         return self.speeds
@@ -34,5 +32,5 @@ class DriveTrain:
     def execute(self):
         self.front_left.set(self.speeds[0])
         self.front_right.set(self.speeds[1])
-        self.back_left.set(self.speeds[2])
-        self.back_right.set(self.speeds[3])
+        self.back_left.set(self.speeds[0])
+        self.back_right.set(self.speeds[1])
