@@ -1,9 +1,10 @@
 import wpilib
+import ctre
 
 class Arm:
-    armRight: wpilib.Victor
+    armRight: ctre.WPI_TalonSRX
     armLeft: wpilib.Victor
-    armWrist: wpilib.Spark
+    armWrist: ctre.WPI_TalonSRX
     armRoller: wpilib.Spark
     hatch: wpilib.DoubleSolenoid
 

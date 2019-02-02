@@ -1,60 +1,53 @@
 import magicbot 
-import wpilib
-import json
+import wpilib, ctre
+from wpilib.shuffleboard import Shuffleboard
+import json, os
 
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
-
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     arm: Arm
 
     def createObjects(self):
-#         with open("ports.json", "r") as f:
-#             self.ports = json.load('''{
-#     "drivetrain": {
-#         "frontLeft": 6,
-#         "frontRight": 7,
-#         "backLeft": 8,
-#         "backRight": 9
-#     },
-#     "arm": {
-#         "elbowLeft": 0,
-#         "elbowRight": 1,
-#         "wrist": 3,
-#         "roller": 4
-#     }
-# }''')
-        #Lift---------------------------------------------
-        self.armLeft = wpilib.Victor(0)
-        self.armRight = wpilib.Victor(1)
-        self.armWrist = wpilib.Spark(3)
-        self.armRoller = wpilib.Spark(4)
-        self.hatch = wpilib.DoubleSolenoid(4, 5)
+        with open("../ports.json" if os.getcwd()[-5:-1] == "test" else "ports.json") as f:
+            self.ports = json.load(f)
+        # Lift
+        armPorts = self.ports["arm"]
+        self.armLeft = wpilib.Victor(armPorts["elbowLeft"])
+        self.armRight = ctre.WPI_TalonSRX(armPorts["elbowRight"])
+        self.armWrist = ctre.WPI_TalonSRX(armPorts["wrist"])
+        self.armRoller = wpilib.Spark(armPorts["roller"])
+        self.hatch = wpilib.DoubleSolenoid(armPorts["hatchA"], armPorts["hatchB"])
 
-        #DriveTrain---------------------------------------
-        self.frontLeft = wpilib.Victor(6)
-        self.frontRight = wpilib.Victor(7)
-        self.backLeft = wpilib.Victor(8)
-        self.backRight = wpilib.Victor(9)
+        # DriveTrain 
+        drivePorts = self.ports["drivetrain"]
+        self.frontLeft = wpilib.Victor(drivePorts["frontLeft"])
+        self.frontRight = wpilib.Victor(drivePorts["frontRight"])
+        self.backLeft = wpilib.Victor(drivePorts["backLeft"])
+        self.backRight = wpilib.Victor(drivePorts["backRight"])
 
         self.joystick = wpilib.Joystick(0)
 
         self.printTimer = wpilib.Timer()
         self.printTimer.start()
+        wpilib.CameraServer.launch()
+        
+        self.logger = logging.getLogger("Robot")
+        self.testTab = Shuffleboard.getTab("Test")
+
 
     def teleopInit(self):
         print("Teleop Started!")
+        
         pass
 
     def teleopPeriodic(self):
         try:
-            #if self.printTimer.hasPeriodPassed(0.5):
-            #    self.logger.info("Driving: " + str(self.joystick.getX()) + " " + str(self.joystick.getY()) + " " + str(self.joystick.getTwist()))
             self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
             if self.joystick.getRawButton(9):
                 self.arm.setSpeed(0.3)
@@ -68,9 +61,9 @@ class Robot(magicbot.MagicRobot):
                 self.arm.armWristSpeed(0)
                 
             if self.joystick.getRawButton(2):
-                self.arm.intake(-0.5)
+                self.arm.intake(-1)
             elif self.joystick.getRawButton(1):
-                self.arm.intake(0.9)
+                self.arm.intake(1)
             else:
                 self.arm.intake(0)
 
@@ -80,6 +73,18 @@ class Robot(magicbot.MagicRobot):
                 self.arm.hatchSet(0)
         except:
             self.onException()
+
+    def testInit(self):
+        print("Starting Test")
+        self.testSpd = (
+            self.testTab
+            .add(title="Speed", value=0.1)
+            .withWidget("Number Slider")
+        )
+
+    def testPeriodic(self):
+        self.armRight.set(self.testSpd.getDouble(1.0))
+        self.armWrist.set(self.testSpd.getDouble(1.0))
 
 if __name__ == '__main__':
     wpilib.run(Robot)

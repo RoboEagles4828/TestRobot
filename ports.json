@@ -7,8 +7,10 @@
     },
     "arm": {
         "elbowLeft": 0,
-        "elbowRight": 1,
-        "wrist": 3,
-        "roller": 4
+        "elbowRight": 4,
+        "wrist": 5,
+        "roller": 4,
+        "hatchA": 4,
+        "hatchB": 5
     }
 }
