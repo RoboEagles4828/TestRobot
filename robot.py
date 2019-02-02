@@ -19,17 +19,17 @@ class Robot(magicbot.MagicRobot):
             self.ports = json.load(f)
         # Arm
         arm_ports = self.ports["arm"]
-        self.arm_left = wpilib.Victor(arm_ports["arm_left"])
+        self.arm_left = ctre.WPI_TalonSRX(arm_ports["arm_left"])
         self.arm_right = ctre.WPI_TalonSRX(arm_ports["arm_right"])
         self.wrist = ctre.WPI_TalonSRX(arm_ports["wrist"])
-        self.intake = wpilib.Spark(arm_ports["intake"])
+        self.intake = ctre.WPI_TalonSRX(arm_ports["intake"])
         self.hatch = wpilib.DoubleSolenoid(arm_ports["hatch_in"], arm_ports["hatch_out"])
         # DriveTrain
         drive_ports = self.ports["drive"]
-        self.front_left = wpilib.Victor(drive_ports["front_left"])
-        self.front_right = wpilib.Victor(drive_ports["front_right"])
-        self.back_left = wpilib.Victor(drive_ports["back_left"])
-        self.back_right = wpilib.Victor(drive_ports["back_right"])
+        self.front_left = wpilib.Spark(drive_ports["front_left"])
+        self.front_right = wpilib.Spark(drive_ports["front_right"])
+        self.back_left = wpilib.Spark(drive_ports["back_left"])
+        self.back_right = wpilib.Spark(drive_ports["back_right"])
 
         self.joystick = wpilib.Joystick(0)
 

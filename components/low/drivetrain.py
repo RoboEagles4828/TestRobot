@@ -2,10 +2,10 @@ import wpilib
 
 class DriveTrain:
 
-    front_left: wpilib.Victor
-    front_right: wpilib.Victor
-    back_left: wpilib.Victor
-    back_right: wpilib.Victor
+    front_left: wpilib.Spark
+    front_right: wpilib.Spark
+    back_left: wpilib.Spark
+    back_right: wpilib.Spark
 
     def __init__(self):
         print("DriveTrain created")

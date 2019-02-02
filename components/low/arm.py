@@ -3,10 +3,10 @@ import ctre
 
 class Arm:
 
-    arm_left: wpilib.Victor
+    arm_left: ctre.WPI_TalonSRX
     arm_right: ctre.WPI_TalonSRX
     wrist: ctre.WPI_TalonSRX
-    intake: wpilib.Spark
+    intake: ctre.WPI_TalonSRX
     hatch: wpilib.DoubleSolenoid
 
     def __init__(self):
