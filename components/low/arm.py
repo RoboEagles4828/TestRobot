@@ -29,6 +29,9 @@ class Arm:
         else:
             self.hatch.set(wpilib.DoubleSolenoid.Value.kReverse)
 
+    def getEncVal(self):
+        return self.arm_left.FeedbackDevice.CTRE_MagEncoder_Absolute
+
     def execute(self):
         self.arm_left.set(self.speed)
         self.arm_right.set(self.speed)

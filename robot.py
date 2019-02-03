@@ -1,5 +1,5 @@
 import json
-import os
+import os, sys
 import logging
 import magicbot
 import wpilib
@@ -14,10 +14,13 @@ class Robot(magicbot.MagicRobot):
     drive: DriveTrain
     arm: Arm
 
-    def createObjects(self):
-        with open("../ports.json" if os.getcwd()[-5:-1] == "test" else "ports.json") as f:
+    def createObjects(self): 
+        self.logger = logging.getLogger("Robot")
+
+        #wd = print(os.path.dirname(os.path.realpath(__file__)))
+        with open("../ports.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/ports.json") as f:
             self.ports = json.load(f)
-        with open("../buttons.json" if os.getcwd()[-5:-1] == "test" else "buttons.json") as f:
+        with open("../buttons.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/buttons.json") as f:
             self.buttons = json.load(f)
         # Arm
         arm_ports = self.ports["arm"]
@@ -35,9 +38,8 @@ class Robot(magicbot.MagicRobot):
 
         self.joystick = wpilib.Joystick(0)
 
-        self.print_timer = wpilib.Timer()
-        self.print_timer.start()
-        self.logger = logging.getLogger("Robot")
+        self.printTimer = wpilib.Timer()
+        self.printTimer.start()
         self.test_tab = Shuffleboard.getTab("Test")
         wpilib.CameraServer.launch()
 
@@ -46,7 +48,10 @@ class Robot(magicbot.MagicRobot):
 
     def teleopPeriodic(self):
         try:
-            self.drive.set(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
+            self.drive.set(self.joystick.getX() / 3, self.joystick.getY() / 3, self.joystick.getTwist() / 3)
+        except:
+            self.onException()
+        try:
             # Arm
             arm_buttons = self.buttons["arm"]
             if self.joystick.getRawButton(arm_buttons["arm_up"]):
@@ -55,11 +60,19 @@ class Robot(magicbot.MagicRobot):
                 self.arm.setSpeed(-0.3)
             else:
                 self.arm.setSpeed(0)
+        except:
+            self.onException()
+        try:
             # Wrist
-            if self.joystick.getRawButton(arm_buttons["wrist"]):
-                self.arm.setWristSpeed(0.3)
+            if self.joystick.getRawButton(arm_buttons["wrist_up"]):
+                self.arm.setWristSpeed(-.9)
+            elif self.joystick.getRawButton(arm_buttons["wrist_down"]):
+                self.arm.setWristSpeed(.9)
             else:
                 self.arm.setWristSpeed(0)
+        except:
+            self.onException()
+        try:
             # Intake
             if self.joystick.getRawButton(arm_buttons["intake_in"]):
                 self.arm.setIntakeSpeed(-1)
@@ -67,8 +80,18 @@ class Robot(magicbot.MagicRobot):
                 self.arm.setIntakeSpeed(1)
             else:
                 self.arm.setIntakeSpeed(0)
+        except:
+            self.onException()
+        try:
             # Hatch
             self.arm.setHatch(self.joystick.getRawButton(arm_buttons["hatch"]))
+        except:
+            self.onException()
+
+        try:
+            # Encoders
+            if self.printTimer.hasPeriodPassed(0.5):
+                self.logger.info(self.arm.getEncVal())
         except:
             self.onException()
 
