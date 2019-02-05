@@ -1,5 +1,5 @@
 import json
-import os, sys
+import sys
 import logging
 import magicbot
 import wpilib
@@ -14,84 +14,82 @@ class Robot(magicbot.MagicRobot):
     drive: DriveTrain
     arm: Arm
 
-    def createObjects(self): 
+    def createObjects(self):
         self.logger = logging.getLogger("Robot")
-
-        #wd = print(os.path.dirname(os.path.realpath(__file__)))
-        with open("../ports.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/ports.json") as f:
+        # Load ports and buttons
+        with open(sys.path[0] + "/ports.json") as f:
             self.ports = json.load(f)
-        with open("../buttons.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/buttons.json") as f:
+        with open(sys.path[0] + "/buttons.json") as f:
             self.buttons = json.load(f)
+        # Drive
+        self.front_left = wpilib.Spark(self.ports["drive"]["front_left"])
+        self.front_right = wpilib.Spark(self.ports["drive"]["front_right"])
+        self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
+        self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
         # Arm
-        arm_ports = self.ports["arm"]
-        self.arm_left = ctre.WPI_TalonSRX(arm_ports["arm_left"])
-        self.arm_right = ctre.WPI_TalonSRX(arm_ports["arm_right"])
-        self.wrist = ctre.WPI_TalonSRX(arm_ports["wrist"])
-        self.intake = ctre.WPI_TalonSRX(arm_ports["intake"])
-        self.hatch = wpilib.DoubleSolenoid(arm_ports["hatch_in"], arm_ports["hatch_out"])
-        # DriveTrain
-        drive_ports = self.ports["drive"]
-        self.front_left = wpilib.Spark(drive_ports["front_left"])
-        self.front_right = wpilib.Spark(drive_ports["front_right"])
-        self.back_left = wpilib.Spark(drive_ports["back_left"])
-        self.back_right = wpilib.Spark(drive_ports["back_right"])
-
+        self.arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
+        self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
+        self.wrist = ctre.WPI_TalonSRX(self.ports["arm"]["wrist"])
+        self.intake = ctre.WPI_TalonSRX(self.ports["arm"]["intake"])
+        self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
+        # Joystick
         self.joystick = wpilib.Joystick(0)
-
+        # Timer
         self.printTimer = wpilib.Timer()
         self.printTimer.start()
+        # Shuffleboard
         self.test_tab = Shuffleboard.getTab("Test")
+        # CameraServer
         wpilib.CameraServer.launch()
 
     def teleopInit(self):
-        print("Teleop Started!")
+        print("Starting Teleop")
 
     def teleopPeriodic(self):
+        # Drive
         try:
-            self.drive.set(self.joystick.getX() / 3, self.joystick.getY() / 3, self.joystick.getTwist() / 3)
+            self.drive.setSpeedsFromJoystick(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
         except:
             self.onException()
+        # Arm
         try:
-            # Arm
-            arm_buttons = self.buttons["arm"]
-            if self.joystick.getRawButton(arm_buttons["arm_up"]):
+            if self.joystick.getRawButton(self.buttons["arm"]["arm_up"]):
                 self.arm.setSpeed(0.3)
-            elif self.joystick.getRawButton(arm_buttons["arm_down"]):
+            elif self.joystick.getRawButton(self.buttons["arm"]["arm_down"]):
                 self.arm.setSpeed(-0.3)
             else:
                 self.arm.setSpeed(0)
         except:
             self.onException()
+        # Wrist
         try:
-            # Wrist
-            if self.joystick.getRawButton(arm_buttons["wrist_up"]):
-                self.arm.setWristSpeed(-.9)
-            elif self.joystick.getRawButton(arm_buttons["wrist_down"]):
-                self.arm.setWristSpeed(.9)
+            if self.joystick.getRawButton(self.buttons["arm"]["wrist_up"]):
+                self.arm.setWristSpeed(-0.9)
+            elif self.joystick.getRawButton(self.buttons["arm"]["wrist_down"]):
+                self.arm.setWristSpeed(0.9)
             else:
                 self.arm.setWristSpeed(0)
         except:
             self.onException()
+        # Intake
         try:
-            # Intake
-            if self.joystick.getRawButton(arm_buttons["intake_in"]):
-                self.arm.setIntakeSpeed(-1)
-            elif self.joystick.getRawButton(arm_buttons["intake_out"]):
-                self.arm.setIntakeSpeed(1)
+            if self.joystick.getRawButton(self.buttons["arm"]["intake_in"]):
+                self.arm.setIntakeSpeed(-1.0)
+            elif self.joystick.getRawButton(self.buttons["arm"]["intake_out"]):
+                self.arm.setIntakeSpeed(1.0)
             else:
                 self.arm.setIntakeSpeed(0)
         except:
             self.onException()
+        # Hatch
         try:
-            # Hatch
-            self.arm.setHatch(self.joystick.getRawButton(arm_buttons["hatch"]))
+            self.arm.setHatch(self.joystick.getRawButton(self.buttons["arm"]["hatch"]))
         except:
             self.onException()
-
+        # Encoders
         try:
-            # Encoders
             if self.printTimer.hasPeriodPassed(0.5):
-                self.logger.info(self.arm.getEncVal())
+                self.logger.info(self.arm.getEnc())
         except:
             self.onException()
 
@@ -104,10 +102,8 @@ class Robot(magicbot.MagicRobot):
         )
 
     def testPeriodic(self):
-        self.arm_right.set(self.test_speed.getDouble(1.0))
-        self.wrist.set(self.test_speed.getDouble(1.0))
+        pass
 
 logging.basicConfig(level=logging.DEBUG)
-
 if __name__ == '__main__':
     wpilib.run(Robot)

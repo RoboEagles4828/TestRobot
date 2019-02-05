@@ -8,21 +8,19 @@ class DriveTrain:
     back_right: wpilib.Spark
 
     def __init__(self):
-        print("DriveTrain created")
         self.speed_left = 0
         self.speed_right = 0
 
-    def set(self, x, y, twist):
-        speed_left = ((y + (x if x > 0 else 0) + twist))
-        speed_right = ((y - (x if x < 0 else 0) - twist))
-
+    def setSpeedsFromJoystick(self, x, y, twist):
+        speed_left = (y + (x if x > 0 else 0) + twist)
+        speed_right = (y - (x if x < 0 else 0) - twist)
+        # Normalization
         speed_max = max(abs(speed_left), abs(speed_right))
         if speed_max > 1:
             speed_left /= speed_max
             speed_right /= speed_max
-
-        self.speed_left = speed_left
-        self.speed_right = speed_right
+        # Set speeds
+        self.setSpeeds(speed_left, speed_right)
 
     def setSpeeds(self, speed_left, speed_right):
         self.speed_left = speed_left

@@ -12,4 +12,4 @@ class TestAuto(AutonomousStateMachine):
 
     @timed_state(duration=3, first=True)
     def drive_forward(self):
-        self.drive.set(0, .3, 0)
+        self.drive.setSpeedsFromJoystick(0, .3, 0)
