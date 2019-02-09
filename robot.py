@@ -3,7 +3,6 @@ import sys
 import logging
 import magicbot
 import wpilib
-from wpilib.shuffleboard import Shuffleboard
 import ctre
 
 from components.low.drivetrain import DriveTrain
@@ -38,7 +37,7 @@ class Robot(magicbot.MagicRobot):
         self.printTimer = wpilib.Timer()
         self.printTimer.start()
         # Shuffleboard
-        self.test_tab = Shuffleboard.getTab("Test")
+        self.test_tab = wpilib.shuffleboard.Shuffleboard.getTab("Test")
         # CameraServer
         wpilib.CameraServer.launch()
 

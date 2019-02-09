@@ -30,7 +30,7 @@ class Arm:
             self.hatch.set(wpilib.DoubleSolenoid.Value.kReverse)
 
     def getEnc(self):
-        return self.arm_left.FeedbackDevice.CTRE_MagEncoder_Absolute
+        return self.arm_right.getQuadraturePosition()
 
     def execute(self):
         self.arm_left.set(self.speed)
