@@ -1,13 +1,13 @@
-import wpilib
+import ctre
 
-class DriveTrain:
 
-    front_left: wpilib.Spark
-    front_right: wpilib.Spark
-    back_left: wpilib.Spark
-    back_right: wpilib.Spark
-
-    def __init__(self):
+class Drivetrain:
+    def __init__(self, front_left: ctre.TalonSRX, front_right: ctre.TalonSRX,
+                 back_left: ctre.TalonSRX, back_right: ctre.TalonSRX):
+        self.front_left = front_left
+        self.front_right = front_right
+        self.back_left = back_left
+        self.back_right = back_right
         self.speed_left = 0
         self.speed_right = 0
 
@@ -27,7 +27,7 @@ class DriveTrain:
         self.speed_right = speed_right
 
     def getSpeeds(self):
-        return [self.speed_left, self.speed_right]
+        return (self.speed_left, self.speed_right)
 
     def execute(self):
         self.front_left.set(self.speed_left)
