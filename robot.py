@@ -72,9 +72,12 @@ class Robot(wpilib.TimedRobot):
                 self.logger.exception(exception)
         # Drivetrain
         try:
+            twist = self.joystick_twist.get()/2
+            if(abs(twist)) < 0.2:
+                twist = 0
             self.drivetrain.set_speeds_joystick(self.joystick_x.get(),
                                                 self.joystick_y.get(),
-                                                self.joystick_twist.get())
+                                                (twist))
             self.logger.info("%s %s %s", self.joystick_x.get(),
                              self.joystick_y.get(), self.joystick_twist.get())
         except Exception as exception:
