@@ -13,3 +13,12 @@ class Ports:
 
 class Buttons:
     pass
+
+
+class ColorSensor:
+    CYAN_GREEN_MIN = 0.4
+    CYAN_BLUE_MIN = 0.3
+    YELLOW_RED_MIN = 0.35
+    YELLOW_GREEN_MIN = 0.45
+    RED_MIN = 0.55
+    GREEN_MIN = 0.5

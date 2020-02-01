@@ -1,6 +1,8 @@
 from enum import Enum
 from rev.color import ColorSensorV3
 
+import config
+
 
 class ColorSensor:
     class Color(Enum):
@@ -18,14 +20,14 @@ class ColorSensor:
         return self.color
 
     def get_color(self):
-        if self.color.red > 0.6:
-            return self.Color.RED
-        if self.color.green > 0.55:
-            return self.Color.GREEN
-        if self.color.red < 0.2:
+        if self.color.green > config.ColorSensor.CYAN_GREEN_MIN and self.color.blue > config.ColorSensor.CYAN_BLUE_MIN:
             return self.Color.CYAN
-        if self.color.blue < 0.2:
+        if self.color.red > config.ColorSensor.YELLOW_RED_MIN and self.color.green > config.ColorSensor.YELLOW_GREEN_MIN:
             return self.Color.YELLOW
+        if self.color.red > config.ColorSensor.RED_MIN:
+            return self.Color.RED
+        if self.color.green > config.ColorSensor.GREEN_MIN:
+            return self.Color.GREEN
         return self.Color.NONE
 
     def execute(self):
