@@ -82,9 +82,9 @@ class Robot(wpilib.TimedRobot):
         # Color sensor
         try:
             color = self.color_sensor.get_raw_color()
-            self.logger.debug("%s: %f %f %f",
-                              self.color_sensor.get_color().name, color.red,
-                              color.green, color.blue)
+            self.logger.info("%s: %f %f %f",
+                             self.color_sensor.get_color().name, color.red,
+                             color.green, color.blue)
         except Exception as exception:
             self.logger.exception(exception)
 
