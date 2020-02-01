@@ -75,6 +75,8 @@ class Robot(wpilib.TimedRobot):
             self.drivetrain.set_speeds_joystick(self.joystick_x.get(),
                                                 self.joystick_y.get(),
                                                 self.joystick_twist.get())
+            self.logger.info("%s %s %s", self.joystick_x.get(),
+                             self.joystick_y.get(), self.joystick_twist.get())
         except Exception as exception:
             self.logger.exception(exception)
         # Color sensor

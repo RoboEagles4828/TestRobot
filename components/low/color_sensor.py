@@ -12,18 +12,21 @@ class ColorSensor:
 
     def __init__(self, color_sensor: ColorSensorV3):
         self.color_sensor = color_sensor
+        self.color = None
 
     def get_raw_color(self):
-        return self.color_sensor.getColor()
+        return self.color
 
     def get_color(self):
-        raw_color = self.color_sensor.getColor()
-        if raw_color.red > 0.6:
+        if self.color.red > 0.6:
             return self.Color.RED
-        if raw_color.green > 0.55:
+        if self.color.green > 0.55:
             return self.Color.GREEN
-        if raw_color.red < 0.2:
+        if self.color.red < 0.2:
             return self.Color.CYAN
-        if raw_color.blue < 0.2:
+        if self.color.blue < 0.2:
             return self.Color.YELLOW
         return self.Color.NONE
+
+    def execute(self):
+        self.color = self.color_sensor.getColor()
