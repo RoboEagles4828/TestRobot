@@ -4,25 +4,24 @@ import wpilib
 import ctre
 import rev
 import navx
- 
+
 import config
 from components.low.analog_input import AnalogInput
 from components.low.digital_input import DigitalInput
 from components.low.drivetrain import Drivetrain
 from components.low.color_sensor import ColorSensor
- 
- 
+
+
 class Robot(wpilib.TimedRobot):
     """Main robot class"""
     def robotInit(self):
         """Robot initialization"""
-        self.navx = navx.AHRS.create_spi()
-        self.pos1 = False
-        self.pos2 = False
         # Create logger
         self.logger = logging.getLogger("Robot")
         # Create timer
         self.timer = wpilib.Timer()
+        # Create navx
+        self.navx = navx.AHRS.create_spi()
         # Create components list
         self.components = list()
         # Create joystick
@@ -55,21 +54,42 @@ class Robot(wpilib.TimedRobot):
             rev.color.ColorSensorV3(wpilib.I2C.Port.kOnboard))
         self.components.append(self.color_sensor)
         self.navx.resetDisplacement()
- 
+
     def autonomousInit(self):
         """Autonomous mode initialization"""
- 
+        self.pos1 = False
+        self.pos2 = False
+        self.navx.reset()
+        self.navx.resetDisplacement()
+
     def autonomousPeriodic(self):
         """Autonomous mode periodic (20ms)"""
- 
+        try:
+            if self.navx.getDisplacementY() <= .01 and not self.pos1:
+                self.drivetrain.set_speeds(0.2, 0.2)
+            elif self.navx.getAngle() % 360 <= 90:
+                self.pos1 = True
+                self.navx.resetDisplacement()
+                self.drivetrain.set_speeds(-0.2, 0.2)
+            elif self.navx.getDisplacementY() <= .017 and not self.pos2:
+                self.drivetrain.set_speeds(0.2, 0.2)
+            elif self.navx.getAngle() % 360 >= 0:
+                self.pos2 = True
+                self.navx.resetDisplacement()
+                self.drivetrain.set_speeds(0.2, -0.2)
+            elif self.navx.getDisplacementY() <= 0.005:
+                self.drivetrain.set_speeds(0.2, 0.2)
+            else:
+                self.drivetrain.set_speeds(0, 0)
+            self.logger.info("%f", self.navx.getDisplacementY())
+        except Exception as exception:
+            self.logger.exception(exception)
+
     def teleopInit(self):
         """Teleoperated mode initialization"""
         self.timer.reset()
         self.timer.start()
-        
-        self.navx.reset()
-        self.navx.resetDisplacement()
- 
+
     def teleopPeriodic(self):
         """Teleoperated mode periodic (20ms)"""
         # Run each component's execute function
@@ -95,36 +115,14 @@ class Robot(wpilib.TimedRobot):
                              color.green, color.blue)
         except Exception as exception:
             self.logger.exception(exception)
-        try:
-            if self.navx.getDisplacementY() <= .01 and not self.pos1:
-                self.drivetrain.set_speeds(0.5,0.5)
-            elif self.navx.getAngle()%360 <= 90:
-                self.navx.resetDisplacement()
-                self.pos1 = True
-                self.drivetrain.set_speeds(-0.3,0.3)
-            elif self.navx.getDisplacementY() <= .017 and not self.pos2:
-                self.drivetrain.set_speeds(0.5,0.5)
-            elif self.navx.getAngle()%360 >= 0:
-                self.navx.resetDisplacement()
-                self.pos2 = True
-                self.drivetrain.set_speeds(0.3,-0.3)
-            elif self.navx.getDisplacementY() <= 0.005:
-                self.drivetrain.set_speeds(0.4,0.4)
-            else:
-                self.drivetrain.set_speeds(0,0)
-            self.logger.info("%f", self.navx.getDisplacementY())
-        except Exception as exception:
-            self.logger.exception(exception)
- 
+
     def disabledInit(self):
         """Disabled mode initialization"""
- 
+
     def disabledPeriodic(self):
         """Disabled mode periodic (20ms)"""
- 
- 
+
+
 logging.basicConfig(level=logging.DEBUG)
 if __name__ == "__main__":
     wpilib.run(Robot)
- 
-
