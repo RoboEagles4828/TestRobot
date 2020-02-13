@@ -58,5 +58,5 @@ class ColorSensor:
         # Check wheel status
         if self.status:
             self.wheel = True
-        else:
-            self.wheel = False
+            if self.get_color() == self.target:
+                self.wheel = False

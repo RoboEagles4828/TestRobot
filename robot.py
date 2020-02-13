@@ -61,6 +61,7 @@ class Robot(wpilib.TimedRobot):
         """Teleoperated mode initialization"""
         self.timer.reset()
         self.timer.start()
+        self.color_sensor.to_color(self.color_sensor.Color.RED)
 
     def teleopPeriodic(self):
         """Teleoperated mode periodic (20ms)"""
