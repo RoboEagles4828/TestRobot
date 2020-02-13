@@ -12,23 +12,51 @@ class ColorSensor:
         CYAN = 3
         YELLOW = 4
 
-    def __init__(self, color_sensor: ColorSensorV3):
+    def __init__(self, color_sensor: ColorSensorV3, wheel: bool):
         self.color_sensor = color_sensor
-        self.color = None
+        self.wheel = wheel
+        self.raw_color = None
+        self.color = self.Color.NONE
+        self.data = list()
+        self.status = False
+        self.target = None
 
     def get_raw_color(self):
-        return self.color
+        return self.raw_color
 
     def get_color(self):
-        if self.color.green > config.ColorSensor.CYAN_GREEN_MIN and self.color.blue > config.ColorSensor.CYAN_BLUE_MIN:
-            return self.Color.CYAN
-        if self.color.red > config.ColorSensor.YELLOW_RED_MIN and self.color.green > config.ColorSensor.YELLOW_GREEN_MIN:
-            return self.Color.YELLOW
-        if self.color.red > config.ColorSensor.RED_MIN:
-            return self.Color.RED
-        if self.color.green > config.ColorSensor.GREEN_MIN:
-            return self.Color.GREEN
-        return self.Color.NONE
+        return self.color
+
+    def to_color(self, color: Color):
+        self.status = True
+        self.target = color
+
+    def cycle_color(self):
+        self.to_color(self.get_color())
 
     def execute(self):
-        self.color = self.color_sensor.getColor()
+        # Get raw color
+        color = self.color_sensor.getColor()
+        if color.green > config.ColorSensor.CYAN_GREEN_MIN and color.blue > config.ColorSensor.CYAN_BLUE_MIN:
+            self.raw_color = self.Color.CYAN
+        elif color.red > config.ColorSensor.YELLOW_RED_MIN and color.green > config.ColorSensor.YELLOW_GREEN_MIN:
+            self.raw_color = self.Color.YELLOW
+        elif color.red > config.ColorSensor.RED_MIN:
+            self.raw_color = self.Color.RED
+        elif color.green > config.ColorSensor.GREEN_MIN:
+            self.raw_color = self.Color.GREEN
+        else:
+            self.raw_color = self.Color.NONE
+        # Add data
+        self.data.append(self.get_raw_color())
+        # Drop old data
+        if len(self.data) > config.ColorSensor.FILTER_PERIOD + 1:
+            self.data.pop(0)
+        # Set filtered color
+        if len(set(self.data)) == 1:
+            self.color = self.data[0]
+        # Check wheel status
+        if self.status:
+            self.wheel = True
+        else:
+            self.wheel = False

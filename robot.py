@@ -48,7 +48,7 @@ class Robot(wpilib.TimedRobot):
         self.components.append(self.drivetrain)
         # Create color sensor
         self.color_sensor = ColorSensor(
-            rev.color.ColorSensorV3(wpilib.I2C.Port.kOnboard))
+            rev.color.ColorSensorV3(wpilib.I2C.Port.kOnboard), False)
         self.components.append(self.color_sensor)
 
     def autonomousInit(self):
@@ -81,10 +81,10 @@ class Robot(wpilib.TimedRobot):
             self.logger.exception(exception)
         # Color sensor
         try:
-            color = self.color_sensor.get_raw_color()
-            self.logger.info("%s: %f %f %f",
-                             self.color_sensor.get_color().name, color.red,
-                             color.green, color.blue)
+            self.logger.info("%s : %s : %s",
+                             self.color_sensor.get_raw_color().name,
+                             self.color_sensor.get_color().name,
+                             self.color_sensor.wheel)
         except Exception as exception:
             self.logger.exception(exception)
 

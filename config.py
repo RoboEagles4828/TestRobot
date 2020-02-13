@@ -22,3 +22,4 @@ class ColorSensor:
     YELLOW_GREEN_MIN = 0.45
     RED_MIN = 0.55
     GREEN_MIN = 0.5
+    FILTER_PERIOD = 10
