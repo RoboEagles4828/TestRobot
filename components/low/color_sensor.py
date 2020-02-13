@@ -60,3 +60,4 @@ class ColorSensor:
             self.wheel = True
             if self.get_color() == self.target:
                 self.wheel = False
+                self.status = False
