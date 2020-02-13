@@ -64,6 +64,13 @@ class Robot(wpilib.TimedRobot):
 
     def autonomousPeriodic(self):
         """Autonomous mode periodic (20ms)"""
+        # Run each component's execute function
+        for component in self.components:
+            try:
+                component.execute()
+            except Exception as exception:
+                self.logger.exception(exception)
+        # Auton mode 1
         try:
             if self.navx.getDisplacementY() <= .01 and not self.pos1:
                 self.drivetrain.set_speeds(0.2, 0.2)
