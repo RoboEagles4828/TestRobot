@@ -22,6 +22,8 @@ class Robot(wpilib.TimedRobot):
         self.timer = wpilib.Timer()
         # Create navx
         self.navx = navx.AHRS.create_spi()
+        # Create camera server
+        wpilib.CameraServer.launch()
         # Create components list
         self.components = list()
         # Create joystick
