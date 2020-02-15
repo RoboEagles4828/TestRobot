@@ -49,6 +49,15 @@ class Drivetrain:
         # Set speeds
         self.set_speeds(speed_left, speed_right)
 
+    def get_encoder(self):
+        pass
+
+    def get_distance(self):
+        pass
+
+    def reset_distance(self):
+        pass
+
     def execute(self):
         self.left_0.set(self.speed_left)
         self.left_1.set(self.speed_left)
