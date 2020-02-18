@@ -3,6 +3,7 @@ import logging
 import wpilib
 import ctre
 import rev
+from networktables import NetworkTables
 
 import config
 from components.low.analog_input import AnalogInput
@@ -50,6 +51,8 @@ class Robot(wpilib.TimedRobot):
         self.color_sensor = ColorSensor(
             rev.color.ColorSensorV3(wpilib.I2C.Port.kOnboard))
         self.components.append(self.color_sensor)
+        # Create pi network table
+        self.network_table_pi = NetworkTables.getTable("pi")
 
     def autonomousInit(self):
         """Autonomous mode initialization"""
@@ -70,16 +73,6 @@ class Robot(wpilib.TimedRobot):
                 component.execute()
             except Exception as exception:
                 self.logger.exception(exception)
-        # Drivetrain
-        try:
-            self.drivetrain.set_speeds_joystick(self.joystick_x.get(),
-                                                self.joystick_y.get(),
-                                                self.joystick_twist.get())
-            self.logger.info("%s %s %s", self.joystick_x.get(),
-                             self.joystick_y.get(), self.joystick_twist.get())
-        except Exception as exception:
-            self.logger.exception(exception)
-        # Color sensor
         try:
             color = self.color_sensor.get_raw_color()
             self.logger.info("%s: %f %f %f",
@@ -87,6 +80,12 @@ class Robot(wpilib.TimedRobot):
                              color.green, color.blue)
         except Exception as exception:
             self.logger.exception(exception)
+        value = self.network_table_pi.getNumber("value", 0) * 0.3
+        if abs(value) < 0.05:
+            value = 0
+        elif abs(value) < 0.1:
+            value = value / abs(value) * 0.1
+        self.drivetrain.set_speeds(value, -value)
 
     def disabledInit(self):
         """Disabled mode initialization"""
