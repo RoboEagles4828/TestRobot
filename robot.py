@@ -50,6 +50,8 @@ class Robot(wpilib.TimedRobot):
         self.color_sensor = ColorSensor(
             rev.color.ColorSensorV3(wpilib.I2C.Port.kOnboard))
         self.components.append(self.color_sensor)
+        self.climber_0 = ctre.WPI_TalonFX(10)
+        self.climber_1 = ctre.WPI_TalonFX(11)
 
     def autonomousInit(self):
         """Autonomous mode initialization"""
@@ -85,6 +87,18 @@ class Robot(wpilib.TimedRobot):
             self.logger.info("%s: %f %f %f",
                              self.color_sensor.get_color().name, color.red,
                              color.green, color.blue)
+        except Exception as exception:
+            self.logger.exception(exception)
+        try:
+            if self.joystick.getRawButton(7):
+                self.climber_0.set(0.5)
+                self.climber_1.set(0.5)
+            elif self.joystick.getRawButton(8):
+                self.climber_0.set(-0.5)
+                self.climber_1.set(-0.5)
+            else:
+                self.climber_0.set(0)
+                self.climber_1.set(0)
         except Exception as exception:
             self.logger.exception(exception)
 
